@@ -24,8 +24,7 @@ import UIKit
 
 class PasswordlessView: UIView, View {
 
-    weak var form: Form?
-    weak var countrySelector: CountrySelectorView?
+    weak var form: PasswordlessForm?
     weak var primaryButton: PrimaryButton?
     weak var secondaryButton: SecondaryButton?
 
@@ -42,7 +41,7 @@ class PasswordlessView: UIView, View {
 
         self.primaryButton = primaryButton
         self.secondaryButton = secondaryButton
-        self.form = formView
+        self.form = formView as? PasswordlessForm
 
         self.addSubview(container)
         self.addSubview(primaryButton)
@@ -100,18 +99,18 @@ class PasswordlessView: UIView, View {
 
     }
 
-    func showForm(phone: String?, screen: PasswordlessScreen, authCollectionView: AuthCollectionView?) {
+    func showForm(phone: String?, countryCode: CountryCode?, screen: PasswordlessScreen, authCollectionView: AuthCollectionView?) {
+        let countryData = CountryCodeStore()
         let primaryButton = PrimaryButton()
         let secondaryButton = SecondaryButton()
-        let countrySelector = CountrySelectorView()
-        let formView = InputField()
+        let countrySelector = CountrySelectorView(withData: countryData)
         let messageView = UILabel()
         let container = UIStackView()
         let center = UILayoutGuide()
 
         self.primaryButton = primaryButton
         self.secondaryButton = secondaryButton
-        self.form = formView
+        self.form = countrySelector
 
         self.addSubview(container)
         self.addSubview(primaryButton)
@@ -146,22 +145,21 @@ class PasswordlessView: UIView, View {
         container.addArrangedSubview(messageView)
         container.addArrangedSubview(strutView(withHeight: 10))
         container.addArrangedSubview(countrySelector)
-        container.addArrangedSubview(formView)
 
         messageView.numberOfLines = 2
         messageView.textAlignment = .center
         messageView.font = regularSystemFont(size: 15)
 
-        countrySelector.country = ("United States", "+1")
-
-        formView.type = .phone
-        formView.returnKey = .done
+        let selectedCountry = countryCode ?? countryData.countryCode(forId: "US")
+        countrySelector.updateCountry(selectedCountry)
+        countrySelector.inputField.type = .phone
+        countrySelector.inputField.returnKey = .done
         if authCollectionView != nil {
             messageView.text = "Otherwise, enter your phone to sign in or create an account.".i18n(key: "com.auth0.passwordless.sms.title.social", comment: "Passwordless sms title with social")
         } else {
             messageView.text  = "Enter your phone to sign in or create an account.".i18n(key: "com.auth0.passwordless.sms.title", comment: "Passwordless sms title")
         }
-        formView.text = phone
+        countrySelector.inputField.text = phone
         container.addArrangedSubview(strutView(withHeight: 25))
     }
 

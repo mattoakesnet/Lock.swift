@@ -40,6 +40,10 @@ struct PasswordlessInteractor: PasswordlessAuthenticatable, Loggable {
     var validIdentifier: Bool { return self.user.validEmail }
     var code: String?
     var validCode: Bool = false
+    var countryCode: CountryCode? {
+        get { return self.user.countryCode }
+        set { self.user.countryCode = newValue }
+    }
 
     init(authentication: Authentication, dispatcher: Dispatcher, user: User, options: Options, passwordlessActivity: PasswordlessUserActivity) {
         self.authentication = authentication
@@ -54,11 +58,13 @@ struct PasswordlessInteractor: PasswordlessAuthenticatable, Loggable {
 
         let type = (self.options.passwordlessMethod == .emailCode || self.options.passwordlessMethod == .smsCode) ? PasswordlessType.Code : PasswordlessType.iOSLink
 
-        var authenticator: Auth0.Request<Swift.Void, Auth0.AuthenticationError>
+        var authenticator: Request<Void, AuthenticationError>
         if self.options.passwordlessMethod.mode == "email" {
             authenticator =  self.authentication.startPasswordless(email: identifier, type: type, connection: connection, parameters: self.options.parameters)
         } else {
-            authenticator =  self.authentication.startPasswordless(phoneNumber: identifier, type: type, connection: connection)
+            guard let countryCode = self.countryCode else { return callback(.nonValidInput) }
+            let msisdn = countryCode.prefix + identifier
+            authenticator =  self.authentication.startPasswordless(phoneNumber: msisdn, type: type, connection: connection)
         }
 
         authenticator.start {

@@ -57,11 +57,16 @@ class PasswordlessPresenter: Presentable, Loggable {
         if self.options.passwordlessMethod.mode == "email" {
             view.showForm(email: self.interactor.identifier, screen: screen, authCollectionView: authCollectionView)
         } else {
-            view.showForm(phone: self.interactor.identifier, screen: screen, authCollectionView: authCollectionView)
+            view.showForm(phone: self.interactor.identifier, countryCode: self.interactor.countryCode, screen: screen, authCollectionView: authCollectionView)
         }
+
         let form = view.form
 
-        view.form?.onValueChange = { input in
+        form?.needsToUpdateState()
+
+        form?.onCountryChange = { self.interactor.countryCode = $0 }
+
+        form?.onValueChange = { input in
             self.messagePresenter?.hideCurrent()
             do {
                 try self.interactor.update(input.type, value: input.text)
@@ -110,7 +115,7 @@ class PasswordlessPresenter: Presentable, Loggable {
         }
 
         view.primaryButton?.onPress = action
-        view.form?.onReturn = { [unowned view] _ in
+        form?.onReturn = { [unowned view] _ in
             guard let button = view.primaryButton else { return }
             action(button)
         }
