@@ -54,17 +54,19 @@ struct PasswordlessInteractor: PasswordlessAuthenticatable, Loggable {
     }
 
     func request(_ connection: String, callback: @escaping (PasswordlessAuthenticatableError?) -> Void) {
-        guard let identifier = self.identifier, self.validIdentifier else { return callback(.nonValidInput) }
+        guard var identifier = self.identifier, self.validIdentifier else { return callback(.nonValidInput) }
 
         let type = (self.options.passwordlessMethod == .emailCode || self.options.passwordlessMethod == .smsCode) ? PasswordlessType.Code : PasswordlessType.iOSLink
 
         var authenticator: Request<Void, AuthenticationError>
         if self.options.passwordlessMethod.mode == "email" {
+            // Email
             authenticator =  self.authentication.startPasswordless(email: identifier, type: type, connection: connection, parameters: self.options.parameters)
         } else {
+            // SMS
             guard let countryCode = self.countryCode else { return callback(.nonValidInput) }
-            let msisdn = countryCode.prefix + identifier
-            authenticator =  self.authentication.startPasswordless(phoneNumber: msisdn, type: type, connection: connection)
+            identifier = countryCode.prefix + identifier
+            authenticator =  self.authentication.startPasswordless(phoneNumber: identifier, type: type, connection: connection)
         }
 
         authenticator.start {

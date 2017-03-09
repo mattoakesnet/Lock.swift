@@ -1,4 +1,4 @@
-// CountrySelectorView.swift
+// InternationalPhoneInputView.swift
 //
 // Copyright (c) 2017 Auth0 (http://auth0.com)
 //
@@ -22,7 +22,7 @@
 
 import UIKit
 
-class CountrySelectorView: UIView, PasswordlessForm {
+class InternationalPhoneInputView: UIView, PasswordlessSMSForm {
 
     var container: UIView
     var countryLabel: UILabel
@@ -31,7 +31,7 @@ class CountrySelectorView: UIView, PasswordlessForm {
     var stackView: UIStackView
     var countryStore: CountryCodeStore
 
-    init(withData data: CountryCodeStore) {
+    init(withCountryData data: CountryCodeStore) {
         self.container = UIView()
         self.countryLabel = UILabel()
         self.codeLabel = UILabel()
@@ -114,14 +114,16 @@ class CountrySelectorView: UIView, PasswordlessForm {
 
         constraintEqual(anchor: countryLabel.leftAnchor, toAnchor: iconContainer.rightAnchor, constant: 16)
         constraintEqual(anchor: countryLabel.topAnchor, toAnchor: container.topAnchor)
-        constraintEqual(anchor: countryLabel.rightAnchor, toAnchor: codeLabel.leftAnchor)
+        constraintEqual(anchor: countryLabel.rightAnchor, toAnchor: codeLabel.leftAnchor, priority: UILayoutPriorityDefaultHigh)
         constraintEqual(anchor: countryLabel.bottomAnchor, toAnchor: container.bottomAnchor)
         countryLabel.translatesAutoresizingMaskIntoConstraints = false
 
         constraintEqual(anchor: codeLabel.leftAnchor, toAnchor: countryLabel.rightAnchor)
         constraintEqual(anchor: codeLabel.topAnchor, toAnchor: container.topAnchor)
-        constraintEqual(anchor: codeLabel.rightAnchor, toAnchor: actionIconContainer.leftAnchor, constant: -10)
+        constraintEqual(anchor: codeLabel.rightAnchor, toAnchor: actionIconContainer.leftAnchor)
         constraintEqual(anchor: codeLabel.bottomAnchor, toAnchor: container.bottomAnchor)
+        dimension(dimension: codeLabel.widthAnchor, withValue: 60.0)
+        codeLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
         codeLabel.translatesAutoresizingMaskIntoConstraints = false
 
         constraintGreaterOrEqual(anchor: actionIconContainer.leftAnchor, toAnchor: codeLabel.rightAnchor)
@@ -149,6 +151,7 @@ class CountrySelectorView: UIView, PasswordlessForm {
 
         countryLabel.textColor = UIColor(red:0.73, green:0.73, blue:0.73, alpha:1.0)
         codeLabel.textColor = countryLabel.textColor
+        codeLabel.textAlignment = .right
         iconContainer.backgroundColor = UIColor ( red: 0.9333, green: 0.9333, blue: 0.9333, alpha: 1.0 )
         iconView.tintColor = UIColor ( red: 0.5725, green: 0.5804, blue: 0.5843, alpha: 1.0 )
         actionIconView.tintColor = UIColor.black
