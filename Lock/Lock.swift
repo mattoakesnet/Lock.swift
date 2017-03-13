@@ -321,7 +321,7 @@ public class Lock: NSObject {
 
      ```
      func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
-        return Lock.continueActivity(userActivity, restorationHandler: restorationHandler)
+        return return Lock.continueAuth(using: userActivity)
      }
 
      ```
@@ -330,7 +330,7 @@ public class Lock: NSObject {
 
      - returns: true if the link is of the appropriate format, false otherwise
      */
-    public static func continueAuth(withActivity userActivity: NSUserActivity) -> Bool {
+    public static func continueAuth(using userActivity: NSUserActivity) -> Bool {
         return PasswordlessActivity.shared.continueAuth(withActivity: userActivity)
     }
 

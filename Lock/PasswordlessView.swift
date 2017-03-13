@@ -91,10 +91,10 @@ class PasswordlessView: UIView, View {
 
     func showForm(withPhone phone: String?, countryCode: CountryCode?, authCollectionView: AuthCollectionView?) {
         let countryData = CountryCodeStore()
-        let phoneInput = InternationalPhoneInputView(withCountryData: countryData)
+        let formView = InternationalPhoneInputView(withCountryData: countryData)
         let messageView = UILabel()
 
-        self.form = phoneInput
+        self.form = formView
 
         self.container?.addArrangedSubview(strutView(withHeight: 25))
         if let authView = authCollectionView {
@@ -103,7 +103,7 @@ class PasswordlessView: UIView, View {
         self.container?.addArrangedSubview(strutView(withHeight: 10))
         self.container?.addArrangedSubview(messageView)
         self.container?.addArrangedSubview(strutView(withHeight: 10))
-        self.container?.addArrangedSubview(phoneInput)
+        self.container?.addArrangedSubview(formView)
 
         messageView.numberOfLines = 2
         messageView.textAlignment = .center
@@ -111,16 +111,15 @@ class PasswordlessView: UIView, View {
 
         let selectedCountry = countryCode ?? countryData.countryCode(forId: "US")
 
-        phoneInput.updateCountry(selectedCountry)
-        phoneInput.inputField.type = .phone
-        phoneInput.inputField.returnKey = .done
+        formView.updateCountry(selectedCountry)
+        formView.inputField.type = .phone
+        formView.inputField.returnKey = .done
 
         if authCollectionView != nil {
             messageView.text = "Otherwise, enter your phone to sign in or create an account.".i18n(key: "com.auth0.passwordless.sms.title.social", comment: "Passwordless sms title with social")
         } else {
             messageView.text  = "Enter your phone to sign in or create an account.".i18n(key: "com.auth0.passwordless.sms.title", comment: "Passwordless sms title")
         }
-        phoneInput.inputField.text = phone
         self.container?.addArrangedSubview(strutView(withHeight: 25))
     }
 
@@ -157,6 +156,7 @@ class PasswordlessView: UIView, View {
 
         self.container?.addArrangedSubview(strutView(withHeight: 75))
         self.container?.addArrangedSubview(imageView)
+        self.container?.addArrangedSubview(strutView(withHeight: 10))
         self.container?.addArrangedSubview(messageLabel)
         self.container?.addArrangedSubview(secondaryButton)
         self.container?.addArrangedSubview(strutView(withHeight: 50))

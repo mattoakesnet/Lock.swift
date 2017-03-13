@@ -307,17 +307,6 @@ Allows you to set provider scopes for oauth2/social connections with a comma sep
 .withOptions {
   $0.connectionScope = ["facebook": "user_friends,email"]
 
-#### Passwordless Method
-
-If you are using email passwordless connections, the default method is `.code` which sends the user a one time passcode to login. If you want to use universal links you can use:
-
-```swift
-.withOptions {
-  $0.passwordlessMethod = .magicLink
-
-}
-```
-
 #### Database
 
 * **allow**: Which database screens will be accessible, the default is enable all screens e.g. `.Login, .Signup, .ResetPassword`
