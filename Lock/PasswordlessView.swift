@@ -84,7 +84,6 @@ class PasswordlessView: UIView, View {
         formView.type = .email
         formView.returnKey = .done
         formView.value = email
-                    email ?? "")
 
         self.container?.addArrangedSubview(strutView(withHeight: 25))
     }
@@ -109,11 +108,13 @@ class PasswordlessView: UIView, View {
         messageView.textAlignment = .center
         messageView.font = regularSystemFont(size: 15)
 
-        let selectedCountry = countryCode ?? countryData.countryCode(forId: "US")
+        if let selectedCountry = countryCode ?? countryData.countryCode(forId: "US") {
+            formView.updateCountry(selectedCountry)
+        }
 
-        formView.updateCountry(selectedCountry)
-        formView.inputField.type = .phone
-        formView.inputField.returnKey = .done
+        formView.returnKey = .done
+        formView.value = phone
+        formView.type = .phone
 
         if authCollectionView != nil {
             messageView.text = "Otherwise, enter your phone to sign in or create an account.".i18n(key: "com.auth0.passwordless.sms.title.social", comment: "Passwordless sms title with social")
@@ -123,9 +124,10 @@ class PasswordlessView: UIView, View {
         self.container?.addArrangedSubview(strutView(withHeight: 25))
     }
 
-    func showCodeForm(sentTo identifier: String?, mode: String) {
+    func showCodeForm(sentTo identifier: String?, countryCode: CountryCode?, mode: String) {
         let secondaryButton = SecondaryButton()
         let formView = SingleInputView()
+        var displayIdentifier = ""
 
         self.form = formView
         self.secondaryButton = secondaryButton
@@ -133,23 +135,30 @@ class PasswordlessView: UIView, View {
         self.container?.addArrangedSubview(strutView(withHeight: 20))
         self.container?.addArrangedSubview(formView)
 
+        if let countryCode = countryCode, let identifier = identifier {
+            displayIdentifier = countryCode.prefix + identifier
+        } else  if let identifier = identifier {
+            displayIdentifier = identifier
+        }
+
         formView.type = .oneTimePassword
         formView.returnKey = .done
         if mode == "email" {
             formView.message = String(format: "An email with the code has been sent to %1$@".i18n(key: "com.auth0.passwordless.email.code.sent", comment: "Passwordless code sent by email to %@{identifier}"),
-                                      identifier ?? "")
+                                      displayIdentifier)
         } else {
             formView.message = String(format: "An sms with the code has been sent to %1$@".i18n(key: "com.auth0.passwordless.sms.code.sent", comment: "Passwordless code sent by sms to %@{identifier}"),
-                                      identifier ?? "")
+                                      displayIdentifier)
         }
         secondaryButton.title = "Did not get the code?".i18n(key: "com.auth0.passwordless.code.reminder", comment: "Passwordless code reminder action")
         self.container?.addArrangedSubview(secondaryButton)
     }
 
-    func showLinkSent(identifier: String?) {
+    func showLinkSent(identifier: String?, countryCode: CountryCode?) {
         let secondaryButton = SecondaryButton()
         let imageView = UIImageView()
         let messageLabel = UILabel()
+        var displayIdentifier = ""
 
         self.secondaryButton = secondaryButton
         self.primaryButton?.isHidden = true
@@ -165,13 +174,18 @@ class PasswordlessView: UIView, View {
         imageView.contentMode = .scaleAspectFit
         imageView.image = LazyImage(name: "ic_email_sent", bundle: bundleForLock()).image(compatibleWithTraits: self.traitCollection)
 
+        if let countryCode = countryCode, let identifier = identifier {
+            displayIdentifier = countryCode.prefix + identifier
+        } else  if let identifier = identifier {
+            displayIdentifier = identifier
+        }
+
         messageLabel.numberOfLines = 2
         messageLabel.textAlignment = .center
         messageLabel.font = .systemFont(ofSize: 16, weight: UIFontWeightSemibold)
         messageLabel.textColor = .black
         messageLabel.text = String(format: "We sent you a link to sign in to %1$@".i18n(key: "com.auth0.passwordless.link.sent", comment: "Passwordless link sent to %@{identifier}"),
-                                   identifier ?? "")
-
+                                   displayIdentifier)
         secondaryButton.title = "Did not receive the link?".i18n(key: "com.auth0.passwordless.link.reminder", comment: "Passwordless link reminder action")
     }
 

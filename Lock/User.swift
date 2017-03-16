@@ -62,11 +62,13 @@ class User: DatabaseUser, PasswordlessUser {
 
     func reset() {
         if !self.validUsername { self.username = nil }
-        if !self.validEmail { self.email = nil }
+        if !self.validEmail {
+            self.email = nil
+            self.countryCode = nil
+        }
         self.password = nil
         self.additionalAttributesStatus = [:]
         self.additionalAttributes = [:]
-        self.countryCode = nil
     }
 
     func validAdditionaAttribute(_ name: String) -> Bool {

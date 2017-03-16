@@ -54,7 +54,7 @@ class PasswordlessPresenter: Presentable, Loggable {
 
     private func showCodeForm() -> View {
         let view = PasswordlessView()
-        view.showCodeForm(sentTo: self.interactor.identifier, mode: self.options.passwordlessMethod.mode)
+        view.showCodeForm(sentTo: self.interactor.identifier, countryCode: self.interactor.countryCode, mode: self.options.passwordlessMethod.mode)
 
         let form = view.form
 
@@ -165,7 +165,7 @@ class PasswordlessPresenter: Presentable, Loggable {
 
     private func showLinkSent() -> View {
         let view = PasswordlessView()
-        view.showLinkSent(identifier: self.interactor.identifier)
+        view.showLinkSent(identifier: self.interactor.identifier, countryCode: self.interactor.countryCode)
         view.secondaryButton?.onPress = { button in
             self.navigator.onBack()
         }

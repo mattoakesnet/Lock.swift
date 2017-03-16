@@ -333,26 +333,6 @@ public class Lock: NSObject {
     public static func continueAuth(using userActivity: NSUserActivity) -> Bool {
         return PasswordlessActivity.shared.continueAuth(withActivity: userActivity)
     }
-
-    /**
-     Continues an activity from a universal link.
-
-     This method should be called from your `AppDelegate`
-
-     ```
-     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
-        return return Lock.continueAuth(using: userActivity)
-     }
-
-     ```
-
-     - parameter userActivity: the NSUserActivity to handle.
-
-     - returns: true if the link is of the appropriate format, false otherwise
-     */
-    public static func continueAuth(using userActivity: NSUserActivity) -> Bool {
-        return PasswordlessActivity.shared.continueAuth(withActivity: userActivity)
-    }
 }
 
 private func telemetryFor(authentication: Authentication, webAuth: WebAuth) -> (Authentication, WebAuth) {

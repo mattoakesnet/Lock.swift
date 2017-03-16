@@ -36,7 +36,7 @@ class ModalNavigationController: UINavigationController {
     }
 
     func addBackButton(withCallback callback: @escaping () -> Void) {
-        self.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target:self, action:#selector(navigateBack))
+        self.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action:#selector(navigateBack))
         self.onBack = callback
     }
 

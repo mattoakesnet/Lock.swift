@@ -49,8 +49,8 @@ struct CountryCodeStore {
         self.filter = filter
     }
 
-    func countryCode(forId id: String) -> CountryCode {
-        return self.countryCodes.filter { $0.id == id }.first!
+    func countryCode(forId id: String) -> CountryCode? {
+        return self.countryCodes.filter { $0.id == id }.first
     }
 }
 

@@ -47,6 +47,27 @@ class InternationalPhoneInputView: UIView, Form {
         fatalError("init(coder:) has not been implemented")
     }
 
+    var type: InputField.InputType = .phone {
+        didSet {
+            self.inputField.type = self.type
+        }
+    }
+
+    var returnKey: UIReturnKeyType = .done {
+        didSet {
+            self.inputField.returnKey = self.returnKey
+        }
+    }
+
+    var value: String? {
+        get {
+            return self.inputField.text
+        }
+        set {
+            self.inputField.text = newValue
+        }
+    }
+
     func updateCountry(_ countryCode: CountryCode) {
         self.countryLabel.text = countryCode.name
         self.codeLabel.text = countryCode.prefix

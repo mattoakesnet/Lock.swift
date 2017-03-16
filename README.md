@@ -206,13 +206,18 @@ Lock
 
 #### Passwordless Method
 
-When using Lock passworldess the default passwordless method is `.emailCode` which sends the user a one time passcode to login. If you want to use universal links you can use:
+When using Lock passworldess the default passwordless method is `.emailCode` which sends the user a one time passcode to login. If you want to use email [Universal Links](https://auth0.com/docs/clients/enable-universal-links) you can use:
 
 ```swift
 .withOptions {
     $0.passwordlessMethod = .emailLink
 }
 ```
+
+To send a passcode over SMS you have the following `passwordlessMethod` options.
+
+* .smsCode
+* .smsLink
 
 #### Activity callback
 
