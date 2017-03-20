@@ -49,14 +49,14 @@ class PasswordlessPresenterSpec: QuickSpec {
 
             beforeEach {
                 navigator = MockNavigator()
-                connection = PasswordlessConnection(name: "email")
+                connection = PasswordlessConnection(name: "custom-email", strategy: "email")
                 messagePresenter = MockMessagePresenter()
                 options = LockOptions()
-                options.passwordlessMethod = .emailCode
+                options.passwordlessMethod = .code
                 user = User()
                 passwordlessActivity = MockPasswordlessActivity()
                 dispatcher = ObserverStore()
-                interactor = PasswordlessInteractor(authentication: authentication, dispatcher: dispatcher, user: user, options: options, passwordlessActivity: passwordlessActivity)
+                interactor = PasswordlessInteractor(connection: connection, authentication: authentication, dispatcher: dispatcher, user: user, options: options, passwordlessActivity: passwordlessActivity)
                 presenter = PasswordlessPresenter(interactor: interactor, connection: connection, navigator: navigator, options: options)
                 presenter.messagePresenter = messagePresenter
                 view = presenter.view as! PasswordlessView
@@ -138,7 +138,7 @@ class PasswordlessPresenterSpec: QuickSpec {
                     var interactor: MockPasswordlessInteractor!
 
                     beforeEach {
-                        options.passwordlessMethod = .emailLink
+                        options.passwordlessMethod = .magicLink
                         interactor = MockPasswordlessInteractor()
                         interactor.onLogin = { return nil }
                         interactor.onRequest = { return nil }
@@ -277,14 +277,14 @@ class PasswordlessPresenterSpec: QuickSpec {
 
             beforeEach {
                 navigator = MockNavigator()
-                connection = PasswordlessConnection(name: "sms")
+                connection = PasswordlessConnection(name: "custom-sms", strategy: "sms")
                 messagePresenter = MockMessagePresenter()
                 options = LockOptions()
-                options.passwordlessMethod = .smsCode
+                options.passwordlessMethod = .code
                 user = User()
                 passwordlessActivity = MockPasswordlessActivity()
                 dispatcher = ObserverStore()
-                interactor = PasswordlessInteractor(authentication: authentication, dispatcher: dispatcher, user: user, options: options, passwordlessActivity: passwordlessActivity)
+                interactor = PasswordlessInteractor(connection: connection, authentication: authentication, dispatcher: dispatcher, user: user, options: options, passwordlessActivity: passwordlessActivity)
                 presenter = PasswordlessPresenter(interactor: interactor, connection: connection, navigator: navigator, options: options)
                 presenter.messagePresenter = messagePresenter
                 view = presenter.view as! PasswordlessView
@@ -371,7 +371,7 @@ class PasswordlessPresenterSpec: QuickSpec {
                     var interactor: MockPasswordlessInteractor!
 
                     beforeEach {
-                        options.passwordlessMethod = .smsLink
+                        options.passwordlessMethod = .magicLink
                         interactor = MockPasswordlessInteractor()
                         interactor.onLogin = { return nil }
                         interactor.onRequest = { return nil }
